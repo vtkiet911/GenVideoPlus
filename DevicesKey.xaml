@@ -1,0 +1,14 @@
+﻿<Window x:Class="WPF_SeedingTiktok.DevicesKey"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_SeedingTiktok"
+        mc:Ignorable="d"
+        Title="Generate Video - made by VTKiet911 - ver 1.1.6" Height="166" Width="555">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Name="tbKey" Cursor="Hand" TextWrapping="Wrap" Text="123" VerticalAlignment="Center" MouseLeftButtonUp="CopyLabel_MouseLeftButtonUp" HorizontalAlignment="Center" TextAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>

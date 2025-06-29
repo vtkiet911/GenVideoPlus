@@ -1,0 +1,13 @@
+<project outputDir="D:\WPF\GenVideo\bin" baseDir="D:\WPF\GenVideo 1.1.6" xmlns="http://confuser.codeplex.com">
+  <module path="bin\Debug\GenVideo.exe">
+    <rule pattern="true" preset="minimum" inherit="false">
+      <protection id="anti debug" />
+      <protection id="anti dump" />
+      <protection id="anti ildasm" />
+      <protection id="anti tamper" />
+      <protection id="ctrl flow" />
+      <protection id="invalid metadata" />
+      <protection id="resources" />
+    </rule>
+  </module>
+</project>

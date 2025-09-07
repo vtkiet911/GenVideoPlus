@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GenVideo.ViewModel;
+using System.Collections.ObjectModel;
 
 namespace GenVideo
 {
@@ -69,6 +70,18 @@ namespace GenVideo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void MyListBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.V)
+            {
+                if (Clipboard.ContainsText())
+                {
+                    string text = Clipboard.GetText();
+                    (Content as ObservableCollection<string>)?.Add(text);
+                }
             }
         }
     }

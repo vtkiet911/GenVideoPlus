@@ -9,7 +9,12 @@
         mc:Ignorable="d"
         Closed="Window_Closed"
         Loaded="Window_Loaded"
-        Title="Generate Video - ver 1.1.6 - FiX ECOM" Height="800" Width="1200">
+        Title="Generate Video - ver 3.0.0 - FiX ECOM" Height="800" Width="1888">
+    <Window.InputBindings>
+        <!-- Ctrl+V để gọi PasteCommand -->
+        <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}" />
+    </Window.InputBindings>
+    
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Margin" Value="5"/>
@@ -22,169 +27,215 @@
             <Setter Property="Height" Value="25"/>
         </Style>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="8*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
-            <Label Content="{Binding SettingUI.ExpDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Height="30"></Label>
-            <Label Content="Đây là phiên bản cơ bản, phiên bản cao cấp hơn sẽ có nhiều chức năng hơn! Liên hệ: 0398672527 hoặc 0903222521 hoặc FiXECOM để nâng cấp!" FontWeight="Bold"></Label>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="0">
-            <Image Width="200" Height="100" Source="/logo fixecom.png"></Image>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="1">
-            <Label Content="{Binding SettingUI.AllDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Content="{Binding SettingUI.SumCombination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Content="{Binding SettingUI.SumDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        </StackPanel>
-        <StackPanel  Grid.Row="1" Grid.Column="0" Margin="5,5,5,0">
-            <CheckBox Content="Lật clip ngẫu nhiên" IsChecked="{Binding SettingUI.IsHflip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,-3">
-                <Label Content="Tùy chỉnh thời lượng video(giây):"/>
-                <Label Content="{Binding SettingData.Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
-            </StackPanel>
-            <Slider Width="auto" Minimum="10" Maximum="{Binding SettingUI.MaxDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding SettingData.Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,-3">
-                <Label Content="Số lượng video cần:"/>
-                <Label Content="{Binding SettingData.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
-            </StackPanel>
-            <Slider Width="auto" Minimum="1" Maximum="{Binding SettingUI.MaxQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SettingData.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            
-            <Label Content="Âm thanh sẽ thêm:" Margin="0,0,0,-5"></Label>
-            <!--<TextBox Text="{Binding SettingUI.Audio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="auto"/>-->
-            <ListBox ItemsSource="{Binding SettingUI.Audio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="100" Width="auto"></ListBox>
-            
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Âm lượng clip gốc:" Margin="0,0,0,-3"/>
-                <Label Content="{Binding SettingUI.VolumnAudio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
-            </StackPanel>
-            <Slider Width="auto" Minimum="0" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SettingUI.VolumnAudio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Chọn media" Command="{Binding ChoosenVideo_CMD}"/>
-                <Button Content="Chọn audio" Command="{Binding ChoosenAudio_CMD}"/>
-            </StackPanel>
-            <Button Content="Xáo trộn clip" Command="{Binding GenerateCombine_CMD}"/>
-
-            <Button Content="Generate" Command="{Binding GenerateVideo_CMD}"/>
-            
+    <TabControl>
+        <TabItem Header="Setting Text">
             <Grid>
-                <shared:AnimatedProgressBar TextBlock.Foreground="LimeGreen" Value="{Binding SettingUI.PercentComplete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" Width="auto"/>
-                <Label Content="{Binding SettingUI.Complete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" ></Label>
-            </Grid>
-            
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <DockPanel>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="900">
-                    <ItemsControl ItemsSource="{Binding VideosInfo}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="160" >
-                                    <StackPanel>
-                                        <Image Source="{Binding Thumbnail}" Height="250" Stretch="Uniform"/>
-                                        <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </DockPanel>
-        </StackPanel>
-        <!--<StackPanel Orientation="Horizontal">
-            <Button Content="Add data" Command="{Binding AddData_CMD}"></Button>
-            <TextBox Text="{Binding SettingData.TotalData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <Button Content="Start all" Command="{Binding StartAll_CMD}"></Button>
-            <Button Content="Stop all" Command="{Binding StopAll_CMD}"></Button>
-            <Button Content="Delete all" Command="{Binding DeleteAll_CMD}"></Button>
-        </StackPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="8*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="9*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+                    <Label Content="{Binding SettingUI.ExpDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Height="30"></Label>
+                    <Label Content="Đây là phiên bản cơ bản, phiên bản cao cấp hơn sẽ có nhiều chức năng hơn! Liên hệ: 0398672527 hoặc 0903222521 hoặc FiXECOM để nâng cấp!" FontWeight="Bold"></Label>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <Image Width="200" Height="100" Source="/logo fixecom.png"></Image>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <Label Content="{Binding SettingUI.AllDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="{Binding SettingUI.SumCombination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="{Binding SettingUI.SumDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel  Grid.Row="1" Grid.Column="0" Margin="5,5,5,0">
 
-        <Grid Grid.Row="1">
-            <ListView ItemsSource="{Binding Profiles}" Margin="5">
-                <ListView.View>
-                    <GridView>
-                        -->
-        <!--<GridViewColumn Header="STT" Width="40"
-                                        DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                         AncestorType={x:Type ListViewItem}}, 
-                                         Converter={StaticResource IndexConverter}}" >                            
-                        </GridViewColumn>-->
-        <!--
-                        <GridViewColumn Header="STT" Width="30" DisplayMemberBinding="{Binding Index}"></GridViewColumn>
-                        <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding Name}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding BindingGroupName, Mode=OneWay}" IsReadOnly="True"></TextBox>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Status" Width="150" DisplayMemberBinding="{Binding Status}"></GridViewColumn>                       
-                        <GridViewColumn >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Stop"
-                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                         AncestorType={x:Type Window}},Path=DataContext.StopProfile_CMD}"
-                                            CommandParameter="{Binding}"></Button>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Start"
-                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                         AncestorType={x:Type Window}},Path=DataContext.StartProfile_CMD}"
-                                            CommandParameter="{Binding}"></Button>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Delete"
-                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                         AncestorType={x:Type Window}},Path=DataContext.DeleteProfile_CMD}"
-                                            CommandParameter="{Binding}"></Button>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>                       
-                        <GridViewColumn >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Pause"
-                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                         AncestorType={x:Type Window}},Path=DataContext.PauseProfile_CMD}"
-                                            CommandParameter="{Binding}"></Button>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Resume"
-                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                         AncestorType={x:Type Window}},Path=DataContext.ResumeProfile_CMD}"
-                                            CommandParameter="{Binding}"></Button>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>-->
-    </Grid>
+                    <Label Content="Text sẽ thêm:" Margin="0,0,0,-5"></Label>
+                    <!--<TextBox Text="{Binding SettingUI.Audio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="auto"/>-->
+                    <ListBox ItemsSource="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedLine, Mode=TwoWay}" Height="200" Width="auto"/>
+                    <ComboBox ItemsSource="{Binding MyStyleFonts.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBox Text="{Binding InputTextPointX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <TextBox Text="{Binding InputTextPointY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <TextBox Text="{Binding InputTextSizeFont, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <Image Source="{Binding SettingUI.Image}" Stretch="Uniform" Height="600" MaxHeight="600"></Image>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Generate" IsSelected="false">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="8*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="9*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+                    <Label Content="{Binding SettingUI.ExpDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" Height="30"></Label>
+                    <Label Content="Đây là phiên bản cơ bản, phiên bản cao cấp hơn sẽ có nhiều chức năng hơn! Liên hệ: 0398672527 hoặc 0903222521 hoặc FiXECOM để nâng cấp!" FontWeight="Bold"></Label>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <Image Width="200" Height="100" Source="/logo fixecom.png"></Image>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <Label Content="{Binding SettingUI.AllDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="{Binding SettingUI.SumCombination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="{Binding SettingUI.SumDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel  Grid.Row="1" Grid.Column="0" Margin="5,5,5,0">
+                    <CheckBox Content="Lật clip ngẫu nhiên" IsChecked="{Binding SettingUI.IsHflip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,-3">
+                        <Label Content="Tùy chỉnh thời lượng video(giây):"/>
+                        <Label Content="{Binding SettingData.Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                    </StackPanel>
+                    <Slider Width="auto" Minimum="10" Maximum="{Binding SettingUI.MaxDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding SettingData.Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,-3">
+                        <Label Content="Số lượng video cần:"/>
+                        <Label Content="{Binding SettingData.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                    </StackPanel>
+                    <Slider Width="auto" Minimum="1" Maximum="{Binding SettingUI.MaxQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SettingData.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Label Content="Âm thanh sẽ thêm:" Margin="0,0,0,-5"></Label>
+                    <!--<TextBox Text="{Binding SettingUI.Audio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="auto"/>-->
+                    <ListBox ItemsSource="{Binding SettingUI.Audio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="100" Width="auto"></ListBox>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Âm lượng clip gốc:" Margin="0,0,0,-3"/>
+                        <Label Content="{Binding SettingUI.VolumnAudio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                    </StackPanel>
+                    <Slider Width="auto" Minimum="0" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SettingUI.VolumnAudio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Chọn media" Command="{Binding ChoosenVideo_CMD}"/>
+                        <Button Content="Chọn audio" Command="{Binding ChoosenAudio_CMD}"/>
+                    </StackPanel>
+                    <Button Content="Xáo trộn clip" Command="{Binding GenerateCombine_CMD}"/>
+
+                    <Button Content="Generate" Command="{Binding GenerateVideo_CMD}"/>
+
+                    <Grid>
+                        <shared:AnimatedProgressBar TextBlock.Foreground="LimeGreen" Value="{Binding SettingUI.PercentComplete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" Width="auto"/>
+                        <Label Content="{Binding SettingUI.Complete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" ></Label>
+                    </Grid>
+
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <DockPanel>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="900">
+                            <ItemsControl ItemsSource="{Binding VideosInfo}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="160" >
+                                            <StackPanel>
+                                                <Image Source="{Binding Thumbnail}" Height="250" Stretch="Uniform"/>
+                                                <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DockPanel>
+                </StackPanel>
+                <!--<StackPanel Orientation="Horizontal">
+        <Button Content="Add data" Command="{Binding AddData_CMD}"></Button>
+        <TextBox Text="{Binding SettingData.TotalData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Button Content="Start all" Command="{Binding StartAll_CMD}"></Button>
+        <Button Content="Stop all" Command="{Binding StopAll_CMD}"></Button>
+        <Button Content="Delete all" Command="{Binding DeleteAll_CMD}"></Button>
+    </StackPanel>
+
+    <Grid Grid.Row="1">
+        <ListView ItemsSource="{Binding Profiles}" Margin="5">
+            <ListView.View>
+                <GridView>
+                    -->
+                <!--<GridViewColumn Header="STT" Width="40"
+                                    DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                     AncestorType={x:Type ListViewItem}}, 
+                                     Converter={StaticResource IndexConverter}}" >                            
+                    </GridViewColumn>-->
+                <!--
+                    <GridViewColumn Header="STT" Width="30" DisplayMemberBinding="{Binding Index}"></GridViewColumn>
+                    <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding BindingGroupName, Mode=OneWay}" IsReadOnly="True"></TextBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Status" Width="150" DisplayMemberBinding="{Binding Status}"></GridViewColumn>                       
+                    <GridViewColumn >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Stop"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                     AncestorType={x:Type Window}},Path=DataContext.StopProfile_CMD}"
+                                        CommandParameter="{Binding}"></Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Start"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                     AncestorType={x:Type Window}},Path=DataContext.StartProfile_CMD}"
+                                        CommandParameter="{Binding}"></Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                     AncestorType={x:Type Window}},Path=DataContext.DeleteProfile_CMD}"
+                                        CommandParameter="{Binding}"></Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>                       
+                    <GridViewColumn >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Pause"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                     AncestorType={x:Type Window}},Path=DataContext.PauseProfile_CMD}"
+                                        CommandParameter="{Binding}"></Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Resume"
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                     AncestorType={x:Type Window}},Path=DataContext.ResumeProfile_CMD}"
+                                        CommandParameter="{Binding}"></Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>-->
+            </Grid>
+        </TabItem>
+    </TabControl>
+
+
 </Window>

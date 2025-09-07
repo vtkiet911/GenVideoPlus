@@ -127,6 +127,7 @@
     </Compile>
     <Compile Include="Model\Combinations.cs" />
     <Compile Include="Model\ProfileDetail.cs" />
+    <Compile Include="Model\MyStyleFonts.cs" />
     <Compile Include="Model\SettingUI.cs" />
     <Compile Include="Model\SettingData.cs" />
     <Compile Include="Model\AudioInfo.cs" />

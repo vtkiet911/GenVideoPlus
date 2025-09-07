@@ -22,6 +22,13 @@ using GenVideo.Model;
 using GenVideo.Properties;
 using xNet;
 using System.Globalization;
+using System.Drawing;
+using TagLib.Ape;
+using System.Windows.Media;
+using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Media.Media3D;
+using System.Windows.Controls;
+using System.Drawing.Drawing2D;
 
 namespace GenVideo.ViewModel
 {
@@ -50,11 +57,19 @@ namespace GenVideo.ViewModel
 
         private List<string> _ListCombinations;
         public List<string> ListCombinations { get => _ListCombinations; set { _ListCombinations = value; OnPropertyChanged(); } }
-        
+
+        private MyStyleFonts _MyStyleFonts;
+        public MyStyleFonts MyStyleFonts { get => _MyStyleFonts; set { _MyStyleFonts = value; OnPropertyChanged(); } }
+
+        public ICommand PasteCommand { get; }
         public MainViewModel()
         {
             FirstLoad();
             LoadCommand();
+            PasteCommand = new RelayCommand<object>(
+            _ => true,
+            _ => PasteFromClipboard()
+        );
         }
 
         #region CMD
@@ -72,6 +87,8 @@ namespace GenVideo.ViewModel
         public ICommand StopAll_CMD { get; set; }
         public ICommand StopProfile_CMD { get; set; }
         public ICommand DeleteAll_CMD { get; set; }
+
+        public ICommand SelectedItemChangedCommand { get; set; }
         #endregion
 
         #region Method
@@ -83,6 +100,7 @@ namespace GenVideo.ViewModel
 
         void LoadCommand()
         {
+
             ChoosenVideo_CMD = new RelayCommand<VideosInfo>((p) => { return true; }, (p) => { ChoosenVideos(); });
             ChoosenAudio_CMD = new RelayCommand<VideosInfo>((p) => { return true; }, (p) => { ChoosenAudio(); });
             GenerateCombine_CMD = new RelayCommand<VideosInfo>((p) => { return true; }, (p) => { GenerateCombine(); });
@@ -91,8 +109,396 @@ namespace GenVideo.ViewModel
             StartAll_CMD = new RelayCommand<ProfileDetail>((p) => { return Profiles != null; }, (p) => { StartAll(); });
             StopAll_CMD = new RelayCommand<ProfileDetail>((p) => { return Profiles != null; }, (p) => { StopAll(); });
         }
+        private string _selectedItem = "Kiểu 1";
+        public string SelectedItem
+        {
+            get
+            {
+                if (MyStyleFonts.SelectedItem == null)
+                    MyStyleFonts.SelectedItem = _selectedItem;
+
+                return _selectedItem;
+            }
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged();
+
+                /*// Gọi xử lý luôn tại đây
+                if (_selectedItem != null)
+                    MessageBox.Show($"Đã chọn: {_selectedItem}");*/
+
+                // Khi SelectedItem đổi → gọi Command
+                SelectedItemChangedCommand.Execute(SelectedItem);
+            }
+        }
+
+        private string _inputTextPointX = "0";
+        public string InputTextPointX
+        {
+            get => _inputTextPointX;
+            set
+            {
+                if (_inputTextPointX != value)
+                {
+                    _inputTextPointX = value;
+                    OnPropertyChanged();
+
+                    if (double.TryParse(_inputTextPointX, out var px))
+                        MyStyleFonts.PointX = _inputTextPointX;
+
+                    SelectedItemChangedCommand.Execute(SelectedItem);
+                }
+            }
+        }
+
+        private string _inputTextPointY = "1155";
+        public string InputTextPointY
+        {
+            get
+            {
+                if (MyStyleFonts.PointY == null)
+                    MyStyleFonts.PointY = _inputTextPointY;
+
+                return _inputTextPointY;
+            }
+            set
+            {
+                if (_inputTextPointY != value)
+                {
+                    _inputTextPointY = value;
+                    OnPropertyChanged();
+
+                    if (double.TryParse(_inputTextPointY, out var px))
+                        MyStyleFonts.PointY = _inputTextPointY;
+
+                    SelectedItemChangedCommand.Execute(SelectedItem);
+                }
+            }
+        }
+
+        private string _inputTextSizeFont = "55";
+        public string InputTextSizeFont
+        {
+            get
+            {
+                // đồng bộ _inputTextSizeFont từ MyStyleFonts khi get
+                if (MyStyleFonts.SizeFont == null)
+                    MyStyleFonts.SizeFont = _inputTextSizeFont;
+
+                return _inputTextSizeFont;
+            }
+            set
+            {
+                if (_inputTextSizeFont != value)
+                {
+                    _inputTextSizeFont = value;
+                    OnPropertyChanged();
+
+                    if (double.TryParse(_inputTextSizeFont, out var px))
+                        MyStyleFonts.SizeFont = _inputTextSizeFont;
+
+                    SelectedItemChangedCommand.Execute(SelectedItem);
+                }
+            }
+        }
+        private void PasteFromClipboard()
+        {
+            Content.Clear();
+            if (Clipboard.ContainsText())
+            {
+                string text = Clipboard.GetText();
+                string[] lines = text.Split(
+                    new[] { "\r\n", "\n" },
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var line in lines)
+                {
+                    Content.Add(line.Trim());
+                }
+            }
+            SelectedLine = Content.FirstOrDefault();
+        }
+        public ICommand TextChangedCommand { get; }
+
+
+        void OnSelectedItemChanged(string selected)
+        {
+            selected = SelectedLine;
+            // ❌ Không MessageBox trong MVVM, thay vào đó raise event hoặc xử lý logic
+            // Ở đây demo thôi:
+            System.Diagnostics.Debug.WriteLine($"Bạn chọn: {selected}");
+
+            System.Drawing.Image bitmap = Bitmap.FromFile(appPath + "tiktok interface design.png");
+            Graphics g = Graphics.FromImage(bitmap);
+
+            StringFormat strformat1 = new StringFormat();
+            strformat1.Alignment = StringAlignment.Near;
+
+            System.Drawing.Color strColor1 = ColorTranslator.FromHtml("#ed0c1b");
+
+            Font font = new Font("Comic Sans MS", int.Parse(MyStyleFonts.SizeFont), System.Drawing.FontStyle.Bold);
+
+            /*if (SettingUI == null)
+            {
+                SettingUI = new SettingUI();
+            }*/
+
+            if (SelectedItem == "Kiểu 1")
+            {
+                System.Drawing.Brush textBrush = System.Drawing.Brushes.White;
+
+                // Tạo hiệu ứng Glow (viền đỏ mờ)
+                for (int i = (int.Parse(MyStyleFonts.SizeFont) / 5); i >= 1; i--) // vẽ nhiều lớp viền từ to -> nhỏ
+                {
+                    using (System.Drawing.Pen glowPen = new System.Drawing.Pen(System.Drawing.Color.FromArgb(50, System.Drawing.Color.Red), i * 2)
+                    {
+                        LineJoin = System.Drawing.Drawing2D.LineJoin.Round
+                    })
+                    {
+                        g.DrawPath(glowPen, GetTextPath(selected, font, new System.Drawing.Size(951, 1920), int.Parse(MyStyleFonts.PointY)));
+                    }
+                }
+
+                // Vẽ chữ chính (trắng)
+                using (System.Drawing.Brush whiteBrush = new SolidBrush(System.Drawing.Color.White))
+                {
+                    g.FillPath(whiteBrush, GetTextPath(selected, font, new System.Drawing.Size(951, 1920), int.Parse(MyStyleFonts.PointY)));
+                }
+
+                //g.DrawString(selected, font, new SolidBrush(strColor1), new System.Drawing.Point(int.Parse(MyStyleFonts.PointX), int.Parse(MyStyleFonts.PointY)), strformat1);
+                //bitmap.Save("Arial.png");
+                SettingUI.Image = ConvertBitmapToBitmapSource((Bitmap)bitmap);
+                //SaveImageSourceToFile(SettingUI.Image, "Arial2.png");
+            }
+            if (SelectedItem == "Kiểu 2")
+            {
+                // Brush tô chữ (màu trắng)
+                using (System.Drawing.Brush whiteBrush = new SolidBrush(System.Drawing.Color.White))
+                using (System.Drawing.Pen outlinePen = new System.Drawing.Pen(System.Drawing.Color.Black, (int.Parse(MyStyleFonts.SizeFont) / 2)) // Độ dày viền
+                {
+                    LineJoin = System.Drawing.Drawing2D.LineJoin.Round // bo góc mượt
+                })
+                {
+                    GraphicsPath textPath = GetTextPath(
+                        selected,
+                        font,
+                        new System.Drawing.Size(951, 1920),
+                        int.Parse(MyStyleFonts.PointY));
+
+                    // Vẽ viền (đen)
+                    g.DrawPath(outlinePen, textPath);
+
+                    // Vẽ chữ (trắng)
+                    g.FillPath(whiteBrush, textPath);
+                }
+
+                //g.DrawString(selected, font, new SolidBrush(strColor1), new System.Drawing.Point(int.Parse(MyStyleFonts.PointX), int.Parse(MyStyleFonts.PointY)), strformat1);
+                //bitmap.Save("Arial.png");
+                SettingUI.Image = ConvertBitmapToBitmapSource((Bitmap)bitmap);
+                //SaveImageSourceToFile(SettingUI.Image, "Arial2.png");
+            }
+            if (SelectedItem == "Kiểu 3")
+            {
+
+                // Đo kích thước chữ
+                var textSize = g.MeasureString(selected, font);
+
+                // Tính vị trí để căn giữa
+                float x = (951 - textSize.Width) / 2f;
+                float y = int.Parse(MyStyleFonts.PointY);
+
+                // Padding cho nền vàng
+                int paddingX = 20;
+                int paddingY = 10;
+
+                RectangleF bgRect = new RectangleF(
+                    x - paddingX,
+                    y - paddingY,
+                    textSize.Width + paddingX * 2,
+                    textSize.Height + paddingY * 2
+                );
+
+                int radius = 30;
+
+                // Vẽ nền vàng
+                using (GraphicsPath path = RoundedRect(bgRect, radius))
+                using (var bgBrush = new SolidBrush(System.Drawing.Color.Yellow))
+                {
+                    g.FillPath(bgBrush, path);
+                }
+
+                // Vẽ chữ đen
+                using (var textBrush = new SolidBrush(System.Drawing.Color.Black))
+                {
+                    g.DrawString(selected, font, textBrush, new PointF(x, y));
+                }
+
+
+                //g.DrawString(selected, font, new SolidBrush(strColor1), new System.Drawing.Point(int.Parse(MyStyleFonts.PointX), int.Parse(MyStyleFonts.PointY)), strformat1);
+                //bitmap.Save("Arial.png");
+                SettingUI.Image = ConvertBitmapToBitmapSource((Bitmap)bitmap);
+                    //SaveImageSourceToFile(SettingUI.Image, "Arial2.png");
+                
+            }
+        }
+        // Hàm tạo GraphicsPath cho rectangle bo góc
+        static GraphicsPath RoundedRect(RectangleF rect, int radius)
+        {
+            GraphicsPath path = new GraphicsPath();
+            float d = radius * 2;
+
+            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
+            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
+            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+
+            return path;
+        }
+        void DrawText(string text)
+        {
+            OnSelectedItemChanged(text);
+        }
+        // Hàm tạo GraphicsPath từ chữ
+        static System.Drawing.Drawing2D.GraphicsPath GetTextPath(string text, Font font, System.Drawing.Size canvasSize, int pointY)
+        {
+            if (text == null)
+            {
+                text = "Default text";
+            }
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+
+            // Dùng StringFormat để đo chữ
+            StringFormat format = StringFormat.GenericDefault;
+
+            // Đo kích thước chữ
+            using (Bitmap tempBmp = new Bitmap(1, 1))
+            using (Graphics g = Graphics.FromImage(tempBmp))
+            {
+                SizeF textSize = g.MeasureString(text, font);
+
+                // Tính vị trí canh giữa
+                float x = (canvasSize.Width - textSize.Width) / 2;
+                //float y = (canvasSize.Height - textSize.Height) / 2;
+                PointF centerPoint = new PointF(x, pointY);
+
+                path.AddString(
+                    text,
+                    font.FontFamily,
+                    (int)font.Style,
+                    font.Size * 1.2f, // scale để nét đẹp hơn
+                    centerPoint,
+                    format
+                );
+            }
+
+            return path;
+        }
+        public static void SaveImageSourceToFile(ImageSource image, string filePath)
+        {
+            if (image is BitmapSource bitmapSource)
+            {
+                BitmapEncoder encoder;
+
+                // chọn encoder theo đuôi file
+                string ext = Path.GetExtension(filePath).ToLower();
+                switch (ext)
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                        encoder = new JpegBitmapEncoder();
+                        break;
+                    case ".bmp":
+                        encoder = new BmpBitmapEncoder();
+                        break;
+                    case ".gif":
+                        encoder = new GifBitmapEncoder();
+                        break;
+                    case ".tif":
+                    case ".tiff":
+                        encoder = new TiffBitmapEncoder();
+                        break;
+                    default:
+                        encoder = new PngBitmapEncoder(); // mặc định PNG
+                        break;
+                }
+
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    encoder.Save(stream);
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("ImageSource không phải BitmapSource.");
+            }
+        }
+
+        public static BitmapSource ConvertBitmapToBitmapSource(Bitmap bitmap)
+        {
+            BitmapSource thumbnail;
+            try
+            {
+                thumbnail = Imaging.CreateBitmapSourceFromHBitmap(
+                    bitmap.GetHbitmap(),
+                    IntPtr.Zero,
+                    System.Windows.Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+                return thumbnail;
+            }
+            finally
+            {
+                //DeleteObject(hBitmap); // tránh leak memory
+            }
+        }
+        //public static extern bool DeleteObject(IntPtr hObject);
+
+        private ObservableCollection<string> _content = new ObservableCollection<string>();
+        public ObservableCollection<string> Content
+        {
+            get => _content;
+            set
+            {
+                _content = value;
+                OnPropertyChanged(); // nếu BaseViewModel implement INotifyPropertyChanged
+            }
+        }
+        private string _selectedLine;
+        public string SelectedLine
+        {
+            get => _selectedLine;
+            set
+            {
+                _selectedLine = value;
+                OnPropertyChanged();
+
+                if (!string.IsNullOrEmpty(_selectedLine))
+                {
+                    // Ví dụ: Xử lý khi chọn dòng mới
+                    Debug.WriteLine($"Bạn vừa chọn: {_selectedLine}");
+
+                    DrawText(_selectedLine);
+                }
+            }
+        }
         void SetModel()
         {
+            Content = new ObservableCollection<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                Content.Add("Default text " + i.ToString());
+            }
+
+
+            if (MyStyleFonts == null)
+            {
+                MyStyleFonts = new MyStyleFonts();
+                MyStyleFonts.SizeFont = "55";
+                MyStyleFonts.PointY = "1155";
+            }
             if (VideosInfo == null)
             {
                 VideosInfo = new ObservableCollection<VideosInfo>();
@@ -108,6 +514,12 @@ namespace GenVideo.ViewModel
                 SettingUI.IsHflip = true;
                 SettingUI.Audios = new ObservableCollection<string>();
                 SettingUI.Audio = new ObservableCollection<string>();
+                Uri uri = new Uri(appPath + "tiktok interface design.png");
+                System.Windows.Media.Imaging.BitmapImage bitmap = new System.Windows.Media.Imaging.BitmapImage(uri);
+                SettingUI.Image = bitmap;
+
+                // khởi tạo command
+                SelectedItemChangedCommand = new RelayCommand<string>((p) => { return true; }, OnSelectedItemChanged);
             }
             if (Combinations == null)
             {
@@ -120,6 +532,8 @@ namespace GenVideo.ViewModel
             SettingData.Duration = "0";
             SettingUI.MaxDuration = 10;
             SettingUI.MaxQuantity = 1;
+
+            SelectedLine = Content.FirstOrDefault();
         }
         void ChoosenAudio()
         {
@@ -128,7 +542,7 @@ namespace GenVideo.ViewModel
                 Filter = "Audio files|*.mp3;*.m4a;*.wav",
                 Multiselect = true
             };
-            
+
             if (dialog.ShowDialog() == true)
             {
                 if (AudioInfo != null)
@@ -146,7 +560,7 @@ namespace GenVideo.ViewModel
         }
         void SetUI()
         {
-            if(SettingUI.Audios.Count > 0)
+            if (SettingUI.Audios.Count > 0)
             {
                 //string path = System.IO.Path.GetDirectoryName(Audio);
                 //SettingUI.Audio = Audio.Replace(path + "\\", "");
@@ -177,7 +591,7 @@ namespace GenVideo.ViewModel
                         VideosInfo.Add(LoadMediaInfo(file));
                     }
                 }
-                if(VideosInfo.Count < 2)
+                if (VideosInfo.Count < 2)
                 {
                     string strFilePath = VideosInfo[0].FilePath.ToLower();
                     if (strFilePath.Contains(".jpg") || strFilePath.Contains(".jpeg") || strFilePath.Contains(".png"))
@@ -211,26 +625,27 @@ namespace GenVideo.ViewModel
             string end = "";
         }
         private VideosInfo LoadVideoInfo(string filePath)
-         {
-             var shell = ShellFile.FromFilePath(filePath);
-             var duration = shell.Properties.System.Media.Duration.Value;
+        {
+            var shell = ShellFile.FromFilePath(filePath);
+            var duration = shell.Properties.System.Media.Duration.Value;
 
-             var thumbnail = Imaging.CreateBitmapSourceFromHBitmap(
-                 shell.Thumbnail.ExtraLargeBitmap.GetHbitmap(),
-                 IntPtr.Zero,
-                 Int32Rect.Empty,
-                 BitmapSizeOptions.FromEmptyOptions());
+            var thumbnail = Imaging.CreateBitmapSourceFromHBitmap(
+                shell.Thumbnail.ExtraLargeBitmap.GetHbitmap(),
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
 
-             return new VideosInfo
-             {
-                 FilePath = filePath,
-                 DurationText = duration.HasValue
-                     ? $"Duration: {TimeSpan.FromTicks((long)duration.Value).TotalSeconds:N0} s"
-                     : "Unknown",
-                 DurationTime = TimeSpan.FromTicks((long)duration.Value).TotalSeconds.ToString(),
-                 Thumbnail = thumbnail
-             };
-         }
+            return new VideosInfo
+            {
+                FilePath = filePath,
+                DurationText = duration.HasValue
+                    ? $"Duration: {TimeSpan.FromTicks((long)duration.Value).TotalSeconds:N0} s"
+                    : "Unknown",
+                DurationTime = TimeSpan.FromTicks((long)duration.Value).TotalSeconds.ToString(),
+                Thumbnail = thumbnail
+            };
+        }
+
         private VideosInfo LoadMediaInfo(string filePath)
         {
             var extension = Path.GetExtension(filePath).ToLower();
@@ -347,7 +762,7 @@ namespace GenVideo.ViewModel
             int lenghtVideo = SettingUI.Duration;
             Combinations.Clear();
             ListCombinations.Clear();
-            foreach (var (index, file) in VideosInfo.Select((value, idx)=>(idx,value)))
+            foreach (var (index, file) in VideosInfo.Select((value, idx) => (idx, value)))
             {
                 int timeThan5s = 0;
                 string strDurationTime = file.DurationTime.ToString();
@@ -356,7 +771,7 @@ namespace GenVideo.ViewModel
                 double d = double.Parse(strDurationTime);
                 int durationTime = (int)d;
                 var clips = GetValidClips(fileName, durationTime, lenghtVideo);
-                if(SettingUI.Duration <= durationTime)
+                if (SettingUI.Duration <= durationTime)
                 {
                     Combinations.Add(clips);
                 }
@@ -366,7 +781,7 @@ namespace GenVideo.ViewModel
         void CALCCombination(int lenghtVideo)
         {
             GenCombineVideo();
-            
+
             SettingUI.SumCombination = "Có thể xào ra " + Combinations.Count + " clip!";
             int countDuration = 0;
             if (SettingData.Duration != "0")
@@ -376,7 +791,7 @@ namespace GenVideo.ViewModel
             }
             else
             {
-                countDuration = Combinations.Count() * (lenghtVideo-1) - 1;
+                countDuration = Combinations.Count() * (lenghtVideo - 1) - 1;
                 SettingUI.SumDuration = "Tổng thời lượng của clip sau khi xào là " + countDuration + " giây!";
             }
         }
@@ -389,7 +804,7 @@ namespace GenVideo.ViewModel
                 {
                     for (int end = start + minDuration; end <= videoLength; end++)
                     {
-                        if(end - start == 6)
+                        if (end - start == 6)
                         {
                             result.Add(fileName + "†" + start + "†" + end);
                         }
@@ -423,15 +838,15 @@ namespace GenVideo.ViewModel
                 var keys = Combinations.ToList();
                 string temp = "";
                 int duration = 0;
-                if(SettingData.Duration != "0")
+                if (SettingData.Duration != "0")
                 {
                     duration = int.Parse(SettingData.Duration) / 5;
                 }
                 for (int i = 0; i < Combinations.Count(); i++)
                 {
-                    if(SettingData.Quantity != "0")
+                    if (SettingData.Quantity != "0")
                     {
-                        if(i == int.Parse(SettingData.Quantity))
+                        if (i == int.Parse(SettingData.Quantity))
                         {
                             i = Combinations.Count() + 1;
                             break;
@@ -476,13 +891,13 @@ namespace GenVideo.ViewModel
                     ListCombinations.Add("" + result1);
                 }
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
             }
         }
         void ResetStatus()
         {
-            if(VideosInfo.Count() < 2)
+            if (VideosInfo.Count() < 2)
             {
                 SettingUI.Complete = "";
                 SettingUI.PercentComplete = 0;
@@ -492,7 +907,7 @@ namespace GenVideo.ViewModel
                 SettingUI.Complete = "0/" + VideosInfo.Count();
                 SettingUI.PercentComplete = 0;
             }
-            
+
         }
         void StartGenVideo()
         {
@@ -705,7 +1120,7 @@ namespace GenVideo.ViewModel
                 }
             };
 
-           
+
             process.OutputDataReceived += (s, e) => Console.WriteLine(e.Data);
             process.ErrorDataReceived += (s, e) => Console.WriteLine(e.Data);
 
@@ -715,15 +1130,15 @@ namespace GenVideo.ViewModel
             process.WaitForExit();
         }
 
-        
+
 
         void LoadSavedData()
         {
             try
             {
-                var text = File.ReadAllText("Saved.txt");
+                var text = System.IO.File.ReadAllText("Saved.txt");
                 SettingData = JsonConvert.DeserializeObject<SettingData>(text);
-                
+
             }
             catch
             {
@@ -741,7 +1156,7 @@ namespace GenVideo.ViewModel
             try
             {
                 SettingData.Quantity = "0";
-                File.WriteAllText("Saved.txt", JsonConvert.SerializeObject(SettingData));
+                System.IO.File.WriteAllText("Saved.txt", JsonConvert.SerializeObject(SettingData));
             }
             catch { }
         }
@@ -755,6 +1170,8 @@ namespace GenVideo.ViewModel
             }
             catch { }
         }
+
+
         #endregion
     }
 }

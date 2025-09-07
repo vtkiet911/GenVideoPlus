@@ -4,7 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using GenVideo.ViewModel;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace GenVideo.Model
 {
@@ -62,5 +66,8 @@ namespace GenVideo.Model
         public string SumCombination { get => _SumCombination; set { _SumCombination = value; OnPropertyChanged(); } }
         private string _SumDuration;
         public string SumDuration { get => _SumDuration; set { _SumDuration = value; OnPropertyChanged(); } }
+
+        private ImageSource _Image;
+        public ImageSource  Image { get => _Image; set { _Image = value; OnPropertyChanged(); } }
     }
 }

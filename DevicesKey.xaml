@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_SeedingTiktok"
         mc:Ignorable="d"
-        Title="Generate Video - made by VTKiet911 - ver 1.1.6" Height="166" Width="555">
+        Title="Generate Video - made by VTKiet911 - ver 3.0.0" Height="166" Width="555">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Name="tbKey" Cursor="Hand" TextWrapping="Wrap" Text="123" VerticalAlignment="Center" MouseLeftButtonUp="CopyLabel_MouseLeftButtonUp" HorizontalAlignment="Center" TextAlignment="Center"/>

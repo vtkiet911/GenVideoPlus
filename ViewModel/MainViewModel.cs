@@ -239,6 +239,9 @@ namespace GenVideo.ViewModel
 
             Font font = new Font("Comic Sans MS", int.Parse(MyStyleFonts.SizeFont), System.Drawing.FontStyle.Bold);
 
+            // Đo kích thước chữ
+            var textSize = g.MeasureString(selected, font);
+
             /*if (SettingUI == null)
             {
                 SettingUI = new SettingUI();
@@ -256,14 +259,14 @@ namespace GenVideo.ViewModel
                         LineJoin = System.Drawing.Drawing2D.LineJoin.Round
                     })
                     {
-                        g.DrawPath(glowPen, GetTextPath(selected, font, new System.Drawing.Size(951, 1920), int.Parse(MyStyleFonts.PointY)));
+                        g.DrawPath(glowPen, GetTextPath(selected, font, new System.Drawing.Size(951, 1920), int.Parse(MyStyleFonts.PointY), textSize));
                     }
                 }
 
                 // Vẽ chữ chính (trắng)
                 using (System.Drawing.Brush whiteBrush = new SolidBrush(System.Drawing.Color.White))
                 {
-                    g.FillPath(whiteBrush, GetTextPath(selected, font, new System.Drawing.Size(951, 1920), int.Parse(MyStyleFonts.PointY)));
+                    g.FillPath(whiteBrush, GetTextPath(selected, font, new System.Drawing.Size(951, 1920), int.Parse(MyStyleFonts.PointY), textSize));
                 }
 
                 //g.DrawString(selected, font, new SolidBrush(strColor1), new System.Drawing.Point(int.Parse(MyStyleFonts.PointX), int.Parse(MyStyleFonts.PointY)), strformat1);
@@ -284,7 +287,7 @@ namespace GenVideo.ViewModel
                         selected,
                         font,
                         new System.Drawing.Size(951, 1920),
-                        int.Parse(MyStyleFonts.PointY));
+                        int.Parse(MyStyleFonts.PointY), textSize);
 
                     // Vẽ viền (đen)
                     g.DrawPath(outlinePen, textPath);
@@ -301,8 +304,7 @@ namespace GenVideo.ViewModel
             if (SelectedItem == "Kiểu 3")
             {
 
-                // Đo kích thước chữ
-                var textSize = g.MeasureString(selected, font);
+                
 
                 // Tính vị trí để căn giữa
                 float x = (951 - textSize.Width) / 2f;
@@ -361,7 +363,7 @@ namespace GenVideo.ViewModel
             OnSelectedItemChanged(text);
         }
         // Hàm tạo GraphicsPath từ chữ
-        static System.Drawing.Drawing2D.GraphicsPath GetTextPath(string text, Font font, System.Drawing.Size canvasSize, int pointY)
+        static System.Drawing.Drawing2D.GraphicsPath GetTextPath(string text, Font font, System.Drawing.Size canvasSize, int pointY,SizeF textSize)
         {
             if (text == null)
             {
@@ -376,10 +378,10 @@ namespace GenVideo.ViewModel
             using (Bitmap tempBmp = new Bitmap(1, 1))
             using (Graphics g = Graphics.FromImage(tempBmp))
             {
-                SizeF textSize = g.MeasureString(text, font);
+                //var textSize = g.MeasureString(text, font);
 
                 // Tính vị trí canh giữa
-                float x = (canvasSize.Width - textSize.Width) / 2;
+                float x = (canvasSize.Width - textSize.Width) / 1.8f;
                 //float y = (canvasSize.Height - textSize.Height) / 2;
                 PointF centerPoint = new PointF(x, pointY);
 
@@ -387,7 +389,7 @@ namespace GenVideo.ViewModel
                     text,
                     font.FontFamily,
                     (int)font.Style,
-                    font.Size * 1.2f, // scale để nét đẹp hơn
+                    font.Size * 1.3f, // scale để nét đẹp hơn
                     centerPoint,
                     format
                 );

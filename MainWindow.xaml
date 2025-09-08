@@ -36,7 +36,7 @@
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="9*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
@@ -76,7 +76,7 @@
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="9*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
@@ -130,7 +130,7 @@
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="1">
                     <DockPanel>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="900">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
                             <ItemsControl ItemsSource="{Binding VideosInfo}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>

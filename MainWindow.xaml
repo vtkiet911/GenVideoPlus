@@ -136,9 +136,9 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <DockPanel>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="295" >
                                 <ItemsControl ItemsSource="{Binding VideosInfo}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -147,10 +147,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="2" Width="108" >
                                                 <StackPanel>
-                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
-                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                    <Image Source="{Binding Thumbnail}" Height="170" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="2,2,2,0"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -159,9 +159,9 @@
                             </ScrollViewer>
                         </DockPanel>
                     </StackPanel>
-                    <StackPanel Grid.Column="1">
+                    <StackPanel Grid.Column="1"  Margin="0,0,10,0">
                         <DockPanel>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="295" >
                                 <ItemsControl ItemsSource="{Binding VideosInfo}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -170,10 +170,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="2" Width="108" >
                                                 <StackPanel>
-                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
-                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                    <Image Source="{Binding Thumbnail}" Height="170" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="2,2,2,0"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -182,9 +182,9 @@
                             </ScrollViewer>
                         </DockPanel>
                     </StackPanel>
-                    <StackPanel Grid.Column="2">
+                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
                         <DockPanel>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="295" >
                                 <ItemsControl ItemsSource="{Binding VideosInfo}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -193,10 +193,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="2" Width="108" >
                                                 <StackPanel>
-                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
-                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                    <Image Source="{Binding Thumbnail}" Height="170" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="2,2,2,0"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -205,9 +205,9 @@
                             </ScrollViewer>
                         </DockPanel>
                     </StackPanel>
-                    <StackPanel Grid.Column="3">
+                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
                         <DockPanel>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="295" >
                                 <ItemsControl ItemsSource="{Binding VideosInfo}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -216,10 +216,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="2" Width="108" >
                                                 <StackPanel>
-                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
-                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                    <Image Source="{Binding Thumbnail}" Height="170" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="2,2,2,0"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -228,9 +228,9 @@
                             </ScrollViewer>
                         </DockPanel>
                     </StackPanel>
-                    <StackPanel Grid.Column="4">
+                    <StackPanel Grid.Column="4" Margin="0,0,10,0">
                         <DockPanel>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="295" >
                                 <ItemsControl ItemsSource="{Binding VideosInfo}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -239,10 +239,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="2" Width="108" >
                                                 <StackPanel>
-                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
-                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                    <Image Source="{Binding Thumbnail}" Height="170" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="2,2,2,0"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>

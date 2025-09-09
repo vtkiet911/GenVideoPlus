@@ -14,7 +14,7 @@
         <!-- Ctrl+V để gọi PasteCommand -->
         <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}" />
     </Window.InputBindings>
-    
+
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Margin" Value="5"/>
@@ -62,13 +62,13 @@
                     <TextBox Text="{Binding InputTextPointY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <TextBox Text="{Binding InputTextSizeFont, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="1" Grid.Column="1">
                     <Image Source="{Binding SettingUI.Image}" Stretch="Uniform" Height="600" MaxHeight="600"></Image>
                 </StackPanel>
             </Grid>
         </TabItem>
-        <TabItem Header="Generate" IsSelected="false">
+        <TabItem Header="Generate" IsSelected="true">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
@@ -128,29 +128,131 @@
                     </Grid>
 
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="1">
-                    <DockPanel>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
-                            <ItemsControl ItemsSource="{Binding VideosInfo}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="160" >
-                                            <StackPanel>
-                                                <Image Source="{Binding Thumbnail}" Height="250" Stretch="Uniform"/>
-                                                <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </DockPanel>
-                </StackPanel>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <DockPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                                <ItemsControl ItemsSource="{Binding VideosInfo}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                                <StackPanel>
+                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <DockPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                                <ItemsControl ItemsSource="{Binding VideosInfo}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                                <StackPanel>
+                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <DockPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                                <ItemsControl ItemsSource="{Binding VideosInfo}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                                <StackPanel>
+                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <DockPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                                <ItemsControl ItemsSource="{Binding VideosInfo}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                                <StackPanel>
+                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <DockPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="190">
+                                <ItemsControl ItemsSource="{Binding VideosInfo}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Width="80" >
+                                                <StackPanel>
+                                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform"/>
+                                                    <TextBlock Text="{Binding DurationText}" Margin="5,2,5,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </StackPanel>
+                </Grid>
+                
                 <!--<StackPanel Orientation="Horizontal">
         <Button Content="Add data" Command="{Binding AddData_CMD}"></Button>
         <TextBox Text="{Binding SettingData.TotalData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>

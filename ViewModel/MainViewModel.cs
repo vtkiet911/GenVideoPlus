@@ -1060,10 +1060,8 @@ namespace GenVideo.ViewModel
                             string scaleClip = ScaleInfo[rnd.Next(0, ScaleInfo.Length)];
 
                             string fileName = item.Split('†')[0];
-                            int startClip = int.Parse(item.Split('†')[1]);
-                            int endClip = int.Parse(item.Split('†')[2]);
 
-                            joinArgs += $"[{i}:v]trim=start={startClip}:end={endClip},scale={scaleClip}:force_original_aspect_ratio=decrease,crop=720:1280,fps=30,pad=720:1280:(ow-iw)/2:(oh-ih)/2";
+                            joinArgs += $"[{i}:v]scale={scaleClip}:force_original_aspect_ratio=decrease,crop=720:1280,fps=30,pad=720:1280:(ow-iw)/2:(oh-ih)/2";
 
                             if (hflip == 1)
                             {
@@ -1073,8 +1071,8 @@ namespace GenVideo.ViewModel
                             {
                                 joinArgs += $"[v{i}];";
                             }
-                            joinArgs += $"[{i}:a]atrim=start={startClip}:end={endClip},volume={volumnAudio}[a{i}];";
-                            sumDuration += endClip - startClip;
+                            joinArgs += $"[{i}:a]volume={volumnAudio}[a{i}];";
+                            
                             if (i + 1 < temp1.Count())
                             {
                                 if (i == 0)

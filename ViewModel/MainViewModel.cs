@@ -19,7 +19,7 @@ using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 using GenVideo.Model;
-using GenVideo.Properties;
+using GenVideoPlus.Properties;
 using xNet;
 using System.Globalization;
 using System.Drawing;
@@ -49,11 +49,20 @@ namespace GenVideo.ViewModel
         private ObservableCollection<VideosInfo> _VideosInfo;
         public ObservableCollection<VideosInfo> VideosInfo { get => _VideosInfo; set { _VideosInfo = value; OnPropertyChanged(); } }
 
+
         private ObservableCollection<AudioInfo> _AudioInfo;
         public ObservableCollection<AudioInfo> AudioInfo { get => _AudioInfo; set { _AudioInfo = value; OnPropertyChanged(); } }
         #endregion
         private List<List<string>> _Combinations;
         public List<List<string>> Combinations { get => _Combinations; set { _Combinations = value; OnPropertyChanged(); } }
+
+        private List<string> _ListVideosHook;
+        public List<string> ListVideosHook { get => _ListVideosHook; set { _ListVideosHook = value; OnPropertyChanged(); } }
+
+        private List<string> _ListSourcesVideo;
+        public List<string> ListSourcesVideo { get => _ListSourcesVideo; set { _ListSourcesVideo = value; OnPropertyChanged(); } }
+        private List<string> _ListSourcesAudio;
+        public List<string> ListSourcesAudio { get => _ListSourcesAudio; set { _ListSourcesAudio = value; OnPropertyChanged(); } }
 
         private List<string> _ListCombinations;
         public List<string> ListCombinations { get => _ListCombinations; set { _ListCombinations = value; OnPropertyChanged(); } }
@@ -513,7 +522,6 @@ namespace GenVideo.ViewModel
             {
                 SettingUI = new SettingUI();
                 SettingUI.VolumnAudio = "10";
-                SettingUI.IsHflip = true;
                 SettingUI.Audios = new ObservableCollection<string>();
                 SettingUI.Audio = new ObservableCollection<string>();
                 Uri uri = new Uri(appPath + "tiktok interface design.png");
@@ -530,6 +538,18 @@ namespace GenVideo.ViewModel
             if (ListCombinations == null)
             {
                 ListCombinations = new List<string>();
+            }
+            if (ListVideosHook == null)
+            {
+                ListVideosHook = new List<string>();
+            }
+            if (ListSourcesVideo == null)
+            {
+                ListSourcesVideo = new List<string>();
+            }
+            if (ListSourcesAudio == null)
+            {
+                ListSourcesAudio = new List<string>();
             }
             SettingData.Duration = "0";
             SettingUI.MaxDuration = 10;
@@ -583,17 +603,14 @@ namespace GenVideo.ViewModel
                 foreach (var file in dialog.FileNames)
                 {
                     var videoInfo = LoadMediaInfo(file);
-                    int d = (int)double.Parse(videoInfo.DurationTime);
-                    if (d > 5)
+                    /*int d = (int)double.Parse(videoInfo.DurationTime);
+                    if (d > 0)//Thời lượng tối thiểu
                     {
                         VideosInfo.Add(LoadMediaInfo(file));
-                    }
-                    if (file.ToLower().Contains(".jpg") || file.ToLower().Contains(".jpeg") || file.ToLower().Contains(".png"))
-                    {
-                        VideosInfo.Add(LoadMediaInfo(file));
-                    }
+                    }*/
+                    VideosInfo.Add(LoadMediaInfo(file));
                 }
-                if (VideosInfo.Count < 2)
+                if (VideosInfo.Count < 10)//Tối thiểu 10 source
                 {
                     string strFilePath = VideosInfo[0].FilePath.ToLower();
                     if (strFilePath.Contains(".jpg") || strFilePath.Contains(".jpeg") || strFilePath.Contains(".png"))
@@ -613,13 +630,14 @@ namespace GenVideo.ViewModel
                     var match = Regex.Match(file.DurationText, @"\d+");
                     if (match.Success)
                     {
-                        int seconds = int.Parse(match.Value);  // seconds = 6
+                        int seconds = int.Parse(match.Value);  // seconds = 0
                         AllDuration += seconds;
                     }
                 }
-                SettingUI.MaxQuantity = VideosInfo.Count;
+                /*SettingUI.MaxQuantity = VideosInfo.Count;
                 SettingUI.MaxDuration = VideosInfo.Count * 5;
-                SettingUI.AllDuration = "Tổng thời gian của " + VideosInfo.Count + " video: " + AllDuration + "s";
+                SettingUI.AllDuration = "Tổng thời gian của " + VideosInfo.Count + " video: " + AllDuration + "s";*/
+                LoadListVideo();
                 StartAll();
             }
         END:
@@ -710,6 +728,24 @@ namespace GenVideo.ViewModel
                 //GenAudio();
             }, null, null);
         }
+        void LoadListVideo()
+        {
+            ListVideosHook.Clear();
+            ListSourcesVideo.Clear();
+            foreach (var (index, file) in VideosInfo.Select((value, idx) => (idx, value)))
+            {
+                string fileName = file.FilePath;
+                if (fileName.Contains("hook"))
+                {
+                    ListVideosHook.Add(fileName);
+                }
+                else
+                {
+                    ListSourcesVideo.Add(fileName);
+                }
+                
+            }
+        }
         //void GenAudio() 
         //{
         //    // Thiết lập biến môi trường đến credentials.json
@@ -748,7 +784,6 @@ namespace GenVideo.ViewModel
             {
                 SettingData.Duration = "0";
             }
-            GenerateCombination();
         }
         void GenerateVideo()
         {
@@ -759,26 +794,69 @@ namespace GenVideo.ViewModel
         }
         void GenerateCombination()
         {
-            int combination = 0;
-            SettingUI.Duration = 6;//Rút ngắn độ dài của mỗi video trước khi xào
-            int lenghtVideo = SettingUI.Duration;
-            Combinations.Clear();
+            var results = new List<List<string>>();
+            Random rnd = new Random();
             ListCombinations.Clear();
-            foreach (var (index, file) in VideosInfo.Select((value, idx) => (idx, value)))
+            var keys = ListSourcesVideo.ToList();
+            string temp = "";
+            string structure = SettingData.Structure;
+            string[] result = new string[3];
+
+            ListSourcesAudio = SettingUI.Audios.ToList();
+        _GETGENCOMBINEVIDEOAGAIN1:
+            for (int i = 0; i < VideosInfo.Count(); i++)
             {
-                int timeThan5s = 0;
-                string strDurationTime = file.DurationTime.ToString();
-                //string path = System.IO.Path.GetDirectoryName(file.FilePath);
-                string fileName = file.FilePath;
-                double d = double.Parse(strDurationTime);
-                int durationTime = (int)d;
-                var clips = GetValidClips(fileName, durationTime, lenghtVideo);
-                if (SettingUI.Duration <= durationTime)
+                int countHook = structure.Split('|').Count(x => x.StartsWith("hook", StringComparison.OrdinalIgnoreCase));
+                string[] listHook = new string[countHook];
+            _GETGENHOOKAGAIN:
+                temp = "";
+                for (int hook = 0; hook < countHook; hook++)
                 {
-                    Combinations.Add(clips);
+                    int val = hook;
+                    listHook[val] = ListVideosHook[rnd.Next(0, ListVideosHook.Count() - 1)] + "";
+
+                    bool hasDuplicateHook = listHook.Length != listHook.Distinct().Count();
+                    if (hasDuplicateHook)
+                    {
+                        goto _GETGENHOOKAGAIN;
+                    }
+                    temp += listHook[hook] + "|";
                 }
+
+                int countVideo = structure.Split('|').Count(x => x.StartsWith("video", StringComparison.OrdinalIgnoreCase));
+
+            _GETGENCOMBINEVIDEOAGAIN2:
+                keys = keys.OrderBy(x => rnd.Next()).ToList();
+                for (int j = 0; j < countVideo; j++)
+                {
+                    int val = j;
+                    result[val] = keys[rnd.Next(keys.Count())];
+                }
+                bool hasDuplicate = result.Length != result.Distinct().Count();
+                if (hasDuplicate)
+                {
+                    goto _GETGENCOMBINEVIDEOAGAIN2;
+                }
+                for (int j = 0; j < countVideo; j++)
+                {
+                    temp += result[j] + "|";
+                }
+                string audio = ListSourcesAudio[rnd.Next(ListSourcesAudio.Count() - 1)];
+                temp += audio;
+                foreach (var item in ListCombinations)
+                {
+                    if (item == temp)
+                    {
+                        temp = "";
+                        goto _GETGENCOMBINEVIDEOAGAIN1;
+                    }
+                }
+                temp = temp.Replace("C:\\Users\\vutha\\Downloads\\Dr Natro\\natro cut 4-12\\", "");
+                ListCombinations.Add("" + temp);
+                temp = "";
+
+                //Lưu ra file txt
             }
-            CALCCombination(lenghtVideo);
         }
         void CALCCombination(int lenghtVideo)
         {
@@ -800,7 +878,7 @@ namespace GenVideo.ViewModel
         List<string> GetValidClips(string fileName, int videoLength, int minDuration)
         {
             var result = new List<string>();
-            if (SettingUI.IsHflip)
+            if (SettingData.IsHflip)
             {
                 for (int start = 0; start <= videoLength - minDuration; start++)
                 {
@@ -965,7 +1043,7 @@ namespace GenVideo.ViewModel
 
                         foreach (var item in temp1)
                         {
-                            if (SettingUI.IsHflip)
+                            if (SettingData.IsHflip)
                             {
                                 int tempHflip = rnd.Next(0, 999999);
                                 if (tempHflip % 2 == 0)

@@ -9,7 +9,9 @@
         mc:Ignorable="d"
         Closed="Window_Closed"
         Loaded="Window_Loaded"
-        Title="Generate Video - ver 3.0.0 - FiX ECOM" Height="800" Width="1888">
+        Title="Generate Video Plus - ver 1.0.0 - VTKiet911" Height="800" Width="1888"
+        WindowStartupLocation="Manual"
+        Left="0" Top="0">
     <Window.InputBindings>
         <!-- Ctrl+V để gọi PasteCommand -->
         <KeyBinding Key="V" Modifiers="Control" Command="{Binding PasteCommand}" />
@@ -92,19 +94,19 @@
                     <Label Content="{Binding SettingUI.SumDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel  Grid.Row="1" Grid.Column="0" Margin="5,5,5,0">
-                    <CheckBox Content="Lật clip ngẫu nhiên" IsChecked="{Binding SettingUI.IsHflip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,-3">
+                    <CheckBox Content="Lật clip ngẫu nhiên" IsChecked="{Binding SettingData.IsHflip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,-3" IsEnabled="false">
                         <Label Content="Tùy chỉnh thời lượng video(giây):"/>
                         <Label Content="{Binding SettingData.Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
                     </StackPanel>
                     <Slider Width="auto" Minimum="10" Maximum="{Binding SettingUI.MaxDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding SettingData.Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,-3">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,-3"  IsEnabled="false">
                         <Label Content="Số lượng video cần:"/>
                         <Label Content="{Binding SettingData.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
                     </StackPanel>
                     <Slider Width="auto" Minimum="1" Maximum="{Binding SettingUI.MaxQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SettingData.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
+                    <TextBox Text="{Binding SettingData.Structure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="auto"/>
                     <Label Content="Âm thanh sẽ thêm:" Margin="0,0,0,-5"></Label>
                     <!--<TextBox Text="{Binding SettingUI.Audio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="auto"/>-->
                     <ListBox ItemsSource="{Binding SettingUI.Audio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="100" Width="auto"></ListBox>

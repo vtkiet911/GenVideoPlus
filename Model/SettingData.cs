@@ -14,5 +14,9 @@ namespace GenVideo.Model
 
         private string _Quantity;
         public string Quantity { get => _Quantity; set { _Quantity = value; OnPropertyChanged(); } }
+        private string _Structure;
+        public string Structure { get => _Structure; set { _Structure = value; OnPropertyChanged(); } }
+        private bool _IsHflip;
+        public bool IsHflip { get => _IsHflip; set { _IsHflip = value; OnPropertyChanged(); } }
     }
 }

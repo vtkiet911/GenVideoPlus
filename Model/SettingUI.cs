@@ -17,8 +17,7 @@ namespace GenVideo.Model
         private string _ExpDate;
         public string ExpDate { get => _ExpDate; set { _ExpDate = value; OnPropertyChanged(); } }
 
-        private bool _IsHflip;
-        public bool IsHflip { get => _IsHflip; set { _IsHflip = value; OnPropertyChanged(); } }
+        
 
         private bool _IsSplit;
         public bool IsSplit { get => _IsSplit; set { _IsSplit = value; OnPropertyChanged(); } }
@@ -69,5 +68,6 @@ namespace GenVideo.Model
 
         private ImageSource _Image;
         public ImageSource  Image { get => _Image; set { _Image = value; OnPropertyChanged(); } }
+       
     }
 }

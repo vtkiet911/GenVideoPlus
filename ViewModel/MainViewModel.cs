@@ -638,7 +638,7 @@ namespace GenVideo.ViewModel
                 SettingUI.MaxDuration = VideosInfo.Count * 5;
                 SettingUI.AllDuration = "Tổng thời gian của " + VideosInfo.Count + " video: " + AllDuration + "s";*/
                 LoadListVideo();
-                StartAll();
+                //StartAll();
             }
         END:
             ResetStatus();
@@ -784,12 +784,13 @@ namespace GenVideo.ViewModel
             {
                 SettingData.Duration = "0";
             }
+            StartAll();
         }
         void GenerateVideo()
         {
             StartTask(() =>
             {
-                StartGenVideo();
+              StartGenVideo();
             }, null, null);
         }
         void GenerateCombination()
@@ -851,7 +852,7 @@ namespace GenVideo.ViewModel
                         goto _GETGENCOMBINEVIDEOAGAIN1;
                     }
                 }
-                temp = temp.Replace("C:\\Users\\vutha\\Downloads\\Dr Natro\\natro cut 4-12\\", "");
+                //temp = temp.Replace("C:\\Users\\vutha\\Downloads\\Dr Natro\\natro cut 4-12\\", "");
                 ListCombinations.Add("" + temp);
                 temp = "";
 
@@ -1005,7 +1006,7 @@ namespace GenVideo.ViewModel
                     DateTime now = DateTime.Now;
                     string Audio = "";
 
-                    int tempEnd = int.Parse(Regex.Match(SettingUI.SumDuration, @"\d+").Value);
+                    //int tempEnd = int.Parse(Regex.Match(SettingUI.SumDuration, @"\d+").Value);
                     string transition = "fade|fadeblack|fadewhite|distance|wipeleft|wiperight|wipeup|wipedown|slideleft|slideright|slideup|slidedown|smoothleft|smoothright|smoothup|smoothdown|circlecrop|rectcrop|circleclose|circleopen|horzclose|horzopen|vertclose|vertopen|diagbl|diagbr|diagtl|diagtr|hlslice|hrslice|vuslice|vdslice|dissolve|pixelize|radial|hblur|wipetl|wipetr|wipebl|wipebr|fadegrays|squeezev|squeezeh|zoomin|hlwind|hrwind|vuwind|vdwind|coverleft|coverright|coverup|coverdown|revealleft|revealright|revealup|revealdown";
                     var listTrasition = transition.Split('|');
                     string[] strTitle = new string[0];
@@ -1025,24 +1026,29 @@ namespace GenVideo.ViewModel
                         string videoStr = "";
                         string audioStr = "";
                         string[] temp1 = combination.Split('|');
-                        if (SettingUI.Audios.Count > 0)
+                        /*if (SettingUI.Audios.Count > 0)
                         {
                             Audio = SettingUI.Audios[rnd.Next(0, SettingUI.Audios.Count())];
-                        }
+                        }*/
 
                         foreach (var item in temp1)
                         {
                             joinArgs += "-i \"" + item.Split('†')[0] + "\" ";
                         }
-                        if (SettingUI.Audios.Count > 0)
+                        /*if (SettingUI.Audios.Count > 0)
                         {
                             joinArgs += $" -i \"{Audio}\"";
-                        }
+                        }*/
                         joinArgs += " -filter_complex \"";
                         int i = 0;
 
-                        foreach (var item in temp1)
+                        //foreach (var item in temp1)
+                        int countMp4 = joinArgs.Split('-').Count(x => x.Contains("mp4"));
+                        for (int mp4 = 0; mp4 < countMp4; mp4++)
                         {
+                            int val = mp4;
+                            string item = temp1[val];
+
                             if (SettingData.IsHflip)
                             {
                                 int tempHflip = rnd.Next(0, 999999);
@@ -1061,7 +1067,7 @@ namespace GenVideo.ViewModel
 
                             string fileName = item.Split('†')[0];
 
-                            joinArgs += $"[{i}:v]scale={scaleClip}:force_original_aspect_ratio=decrease,crop=720:1280,fps=30,pad=720:1280:(ow-iw)/2:(oh-ih)/2";
+                            joinArgs += $"[{i}:v]scale={scaleClip}:force_original_aspect_ratio=decrease,crop=1080:1920,fps=30,pad=1080:1920:(ow-iw)/2:(oh-ih)/2,setsar=1";
 
                             if (hflip == 1)
                             {
@@ -1071,9 +1077,9 @@ namespace GenVideo.ViewModel
                             {
                                 joinArgs += $"[v{i}];";
                             }
-                            joinArgs += $"[{i}:a]volume={volumnAudio}[a{i}];";
+                            //joinArgs += $"[{i}:a]volume={volumnAudio}[a{i}];";
                             
-                            if (i + 1 < temp1.Count())
+                            /*if (i + 1 < temp1.Count())
                             {
                                 if (i == 0)
                                 {
@@ -1087,9 +1093,9 @@ namespace GenVideo.ViewModel
                                     joinArgs += $"[afade{i - 1}][a{i + 1}]acrossfade=d=1[afade{i}];";
                                 }
                             }
-                            else
+                            else*/
                             {
-                                if (!joinArgs.Contains("[0:v]trim=start=0"))
+/*                                if (!joinArgs.Contains("[0:v]trim=start=0"))
                                 {
                                     int start = int.Parse(Regex.Match(joinArgs, @"(?<=start=)\d+").Value);
                                     joinArgs += $"[xfade{i - 1}]trim=start={start},fps=30,setpts=PTS-STARTPTS,settb=AVTB";
@@ -1122,15 +1128,20 @@ namespace GenVideo.ViewModel
                                 }
                                 if (SettingUI.Audios.Count > 0)
                                     joinArgs += $";[{i + 1}:a]atrim=start=0:end={sumDuration}[a{i + 1}];[afade{i - 1}][a{i + 1}]amix=inputs=2:duration=shortest[outa]";
-                            }
+*/                            }
                             i++;
                         }
-
+                        for (int mp4 = 0; mp4 < countMp4; mp4++)
+                        {
+                            joinArgs += $"[v{mp4}]";
+                        }
+                        joinArgs += $"concat=n={i}:v=1:a=0[outv]";
+                        
                         //joinArgs += $"\" -map \"[outv]\" -map \"[afade{i-2}]\" -c:v libx264 -crf 23 -preset veryfast -t {sumDuration - 2} video_{now.Hour}_{now.Minute}_{index}.mp4";
-                        joinArgs += $"\" -map \"[outv]\" -map \"";
+                        joinArgs += $"\" -map \"[outv]\" -map {i}:a";
                         if (SettingUI.Audios.Count > 0)
                         {
-                            joinArgs += $"[outa]\"";
+                            //joinArgs += $"[outa]\"";
                         }
                         else
                         {
@@ -1138,8 +1149,8 @@ namespace GenVideo.ViewModel
                         }
 
                         joinArgs += $" -c:v ";
-                        joinArgs += $"libx264 -crf 23 -preset veryfast";
-                        joinArgs += $" \"{appPath}Output\\video_{tempEnd}s_{now.Hour}h_{now.Minute}m_{now.Second}s_{index}.mp4\"";
+                        joinArgs += $"libx264 -crf 23 -preset veryfast -shortest";
+                        joinArgs += $" \"{appPath}Output\\video_{now.Day}{now.Month}_{now.Hour}h{now.Minute}m{now.Second}s_{index}.mp4\"";
 
                         SettingUI.Complete = "Đang hoạt động " + index + "/" + ListCombinations.Count();
                         RunFFmpeg(joinArgs);
@@ -1156,7 +1167,7 @@ namespace GenVideo.ViewModel
                     try
                     {
                         // Danh sách các tiến trình cần kill
-                        string[] processNames = { "GenVideo" };
+                        string[] processNames = { "GenVideoPlus" };
 
                         foreach (var processName in processNames)
                         {
@@ -1182,7 +1193,7 @@ namespace GenVideo.ViewModel
                 }
             }
         }
-        public string[] ScaleInfo = new string[] { "734:1306", "756:1344", "770:1370", "785:1395", "799:1421", "814:1446", "828:1472", "842:1498", "857:1523", "871:1549", "886:1574", "900:1600", "914:1626" };
+        public string[] ScaleInfo = new string[] { "1112:1978","1134:2016","1156:2054","1177:2093","1199:2131","1220:2170","1242:2208","1177:2093" };
         void RunFFmpeg(string arguments)
         {
             var process = new Process

@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Closed="Window_Closed"
         Loaded="Window_Loaded"
-        Title="Generate Video Plus - ver 1.0.0 - VTKiet911" Height="800" Width="1888"
+        Title="Generate Video Plus - ver 1.0.0 - VTKiet911" Height="800" Width="1288"
         WindowStartupLocation="Manual"
         Left="0" Top="0">
     <Window.InputBindings>
@@ -38,7 +38,7 @@
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="9*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
@@ -132,15 +132,15 @@
                 </StackPanel>
                 <Grid Grid.Row="1" Grid.Column="1">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <!--<ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>-->
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <DockPanel>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="295" >
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="1100" >
                                 <ItemsControl ItemsSource="{Binding VideosInfo}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -161,7 +161,7 @@
                             </ScrollViewer>
                         </DockPanel>
                     </StackPanel>
-                    <StackPanel Grid.Column="1"  Margin="0,0,10,0">
+                    <!--<StackPanel Grid.Column="1"  Margin="0,0,10,0">
                         <DockPanel>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500" MaxWidth="295" >
                                 <ItemsControl ItemsSource="{Binding VideosInfo}">
@@ -252,7 +252,7 @@
                                 </ItemsControl>
                             </ScrollViewer>
                         </DockPanel>
-                    </StackPanel>
+                    </StackPanel>-->
                 </Grid>
                 
                 <!--<StackPanel Orientation="Horizontal">
